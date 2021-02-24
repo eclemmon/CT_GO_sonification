@@ -15,7 +15,7 @@
 (
 ~fibroblast_endothelial_grain_size = Prand(List.fill(5, {arg i; 0.75+(i*0.25)}), 65).asStream;
 ~fibroblast_endothelial_texture_speed = Prand(List.fill(2, {arg i; 12+i*6}), 65).asStream;
-~fibroblast_endothelial_amp = Prand(List.fill(4, {arg i; 0.5+(i*0.01)}), 65).asStream;
+~fibroblast_endothelial_amp = Prand(List.fill(4, {arg i; 0.2+(i*0.01)}), 65).asStream;
 
 ~endothelial_vocoder_pitches = Pseq([
 	Prand([72, 76, 79, 83].midicps, 20),
@@ -28,7 +28,7 @@
 
 ~endothelial_texture_speed = Prand(List.fill(4, {arg i; (i+1)*0.7}), 65).asStream;
 ~endothelial_texture_dur = Prand(List.fill(5, {arg i; 0.8+(i*0.1)}), 65).asStream;
-~endothelial_amp = Prand(List.fill(2, {arg i; 5+i}), 65).asStream;
+~endothelial_amp = Prand(List.fill(2, {arg i; 1+i}), 65).asStream;
 ~endothelial_attack = Prand([0.01, 0.1, 0.4, 0.01, 0.01, 0.05], 65).asStream;
 
 Routine({

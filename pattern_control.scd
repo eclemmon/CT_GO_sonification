@@ -6,6 +6,9 @@ s.waitForBoot({
 });
 
 (
+// #################
+// Initialize reverb and load buffers.
+// #################
 // Reverbs
 Synth(\reverb1, [\output, 0, \room, 1, \damp, 1, \mix, 0.5, \amp, 0.5, \input, 99]);
 Synth(\reverb1, [\output, 0, \room, 0.4, \damp, 1, \mix, 0.5, \amp, 0.5, \input, 98]);
@@ -17,6 +20,8 @@ Synth(\reverb1, [\output, 0, \room, 0.4, \damp, 1, \mix, 0.5, \amp, 0.5, \input,
 ~endothelial_buffer = Buffer.readChannel(s, ~endothelial_path.fullPath, channels: 1);
 )
 
+// #################
+// Processes start here.
 // #################
 
 // Neuron-like cells
@@ -31,7 +36,6 @@ thisProcess.interpreter.executeFile("/Users/ericlemmon/Desktop/VPL_Sonification_
 thisProcess.interpreter.executeFile("/Users/ericlemmon/Desktop/VPL_Sonification_Project/project_files/ependymal.scd");
 
 // #################
-// #################
 
 // Endothelial and Pericyte cells
 // ------------------------------
@@ -42,7 +46,6 @@ thisProcess.interpreter.executeFile("/Users/ericlemmon/Desktop/VPL_Sonification_
 thisProcess.interpreter.executeFile("/Users/ericlemmon/Desktop/VPL_Sonification_Project/project_files/pericytes.scd");
 
 // #################
-// #################
 
 // Fibroblast cells
 // ------------------------------
@@ -50,12 +53,16 @@ thisProcess.interpreter.executeFile("/Users/ericlemmon/Desktop/VPL_Sonification_
 thisProcess.interpreter.executeFile("/Users/ericlemmon/Desktop/VPL_Sonification_Project/project_files/fibroblasts.scd");
 
 // #################
-// #################
 
+// Oligodendracytes & OPCS
+// ------------------------------
+// OPCS:
+thisProcess.interpreter.executeFile("/Users/ericlemmon/Desktop/VPL_Sonification_Project/project_files/opc.scd");
 
 (
 // Oligodendracytes & OPCS
-Synth(\OPC, [\amp, 0.1, \trig, 1.0, \fmod_freq, 24.midicps, \freq, 60.midicps, \dur, 15, \attack, 0.02, \decay_time, 0.3, \decay_amp, 0.1, \release, 0.05, \out, 99, \pos, 1.0]);
+//arg out=0, dur=15, amp, attack=0.1, release=0.1, decay_time=0.1, decay_amp=0.7, freq=440, fmod_freq=533, fmod_mul=200, sustain_freq=660, pos=0, trig=0, filter_env_start_freq=880, filter_env_end_freq=440, filter_sus_dur=15, filter_decay_dur=0.1, filter_release_time=0.1;
+Synth(\OPC, [\amp, 0.1, \trig, 1.0, \fmod_freq, 24.midicps, \freq, 60.midicps, \dur, 15, \attack, 0.02, \decay_time, 0.3, \decay_amp, 0.1, \release, 0.05, \out, 0, \pos, 0, \filter_release_time, 4]);
 Synth(\Oligodendrocytes, [\amp, 0.2, \trig, 1.0, \fmod_freq, 60.midicps, \freq, 36.midicps, \dur, 15, \attack, 0.02, \decay_time, 0.3, \decay_amp, 0.1, \release, 0.05, \out, 99, \pos, 0]);
 )
 

@@ -13,23 +13,53 @@
 // Synth(\endothelial_vocoder, [\input, [94,95], \out, 0, \trig, 1, \freq, 24.midicps, \texture_dur, 1, \amp, 10, \texture_speed, 4]);
 
 (
-~fibroblast_endothelial_grain_size = Prand(List.fill(5, {arg i; 0.75+(i*0.25)}), 65).asStream;
-~fibroblast_endothelial_texture_speed = Prand(List.fill(2, {arg i; 12+i*6}), 65).asStream;
-~fibroblast_endothelial_amp = Prand(List.fill(4, {arg i; 0.2+(i*0.01)}), 65).asStream;
+var stream_length, subdiv;
+stream_length = 120;
+subdiv = stream_length/4;
 
-~endothelial_vocoder_pitches = Pseq([
-	Prand([72, 76, 79, 83].midicps, 20),
-	Prand([72, 76, 79, 83].midicps, 10),
-	Prand([71, 76, 79, 83].midicps, 10),
-	Prand([70, 76, 79, 83].midicps, 20),
-	Prand([66, 76, 79, 83].midicps, 20)
+~fibroblast_endothelial_grain_size = Pseq([
+	Prand(List.fill(5, {arg i; 0.75+(i*0.1)}), subdiv), // development
+	Prand(List.fill(5, {arg i; 0.75+(i*0.5)}), subdiv), // response
+	Prand(List.fill(5, {arg i; 0.75+(i*0.25)}), subdiv), // peptide biosynthesis
+	Prand(List.fill(5, {arg i; 0.75+(i*0.25)}), subdiv), // peptide biosynthesis
+	],
+1).asStream;
+
+~fibroblast_endothelial_texture_speed = Pseq([
+	Prand(List.fill(2, {arg i; 12+(i*6)}), subdiv), // development
+	Prand(List.fill(5, {arg i; 12+(i*24)}), subdiv), // response
+	Prand(List.fill(5, {arg i; 12+(i*12)}), subdiv), // peptide biosynthesis
+	Prand(List.fill(5, {arg i; 12+(i*12)}), subdiv), // peptide biosynthesis
 ],
 1).asStream;
 
-~endothelial_texture_speed = Prand(List.fill(4, {arg i; (i+1)*0.7}), 65).asStream;
-~endothelial_texture_dur = Prand(List.fill(5, {arg i; 0.8+(i*0.1)}), 65).asStream;
-~endothelial_amp = Prand(List.fill(2, {arg i; 1+i}), 65).asStream;
-~endothelial_attack = Prand([0.01, 0.1, 0.4, 0.01, 0.01, 0.05], 65).asStream;
+~fibroblast_endothelial_amp = Pseq([
+	Prand(List.fill(4, {arg i; 0.2+(i*0.01)}), subdiv), // development
+	Prand(List.fill(4, {arg i; 0.3+(i*0.01)}), subdiv), // response
+	Prand(List.fill(4, {arg i; 0.2+(i*0.02)}), subdiv), // peptide biosynthesis
+	Prand(List.fill(4, {arg i; 0.2+(i*0.02)}), subdiv), // peptide biosynthesis
+	],
+1).asStream;
+
+~endothelial_vocoder_pitches = Pseq([
+	Prand([72, 76, 79, 83].midicps, subdiv), // development
+	Prand([60, 62, 64, 68, 70].midicps, subdiv), // response
+	Prand([59, 64, 67, 71, 74].midicps, subdiv), // peptide biosynthesis
+	Prand([59, 64, 67, 71, 74].midicps, subdiv), // peptide biosynthesis
+],
+1).asStream;
+
+~endothelial_texture_speed = Pseq([
+	Prand(List.fill(4, {arg i; (i+1)*0.7}), subdiv), // development
+	Prand(List.fill(4, {arg i; (i+1)*1.2}), subdiv), // response
+	Prand(List.fill(4, {arg i; (i+1)}), subdiv), // peptide biosynthesis
+	Prand(List.fill(4, {arg i; (i+1)}), subdiv), // peptide biosynthesis
+],
+1).asStream;
+
+~endothelial_texture_dur = Prand(List.fill(5, {arg i; 0.8+(i*0.1)}), stream_length).asStream;
+~endothelial_amp = Prand(List.fill(2, {arg i; 2+i}), stream_length).asStream;
+~endothelial_attack = Prand([0.01, 0.1, 0.4, 0.01, 0.01, 0.05], stream_length).asStream;
 
 Routine({
 	// BE SURE TO CHECK INS AND OUTS SO THAT THERE ARE NO CONFLICTS
@@ -61,30 +91,33 @@ Routine({
 			\dur, 120
 		]);
 	});
+
 	3.wait;
-	loop({
-		~endothelial.do({
-			arg item, index;
-			item.set(
-				\trig, 1,
-				\freq, ~endothelial_vocoder_pitches,
-				\texture_dur, ~endothelial_texture_speed,
-				\texture_speed, ~endothelial_texture_dur,
-				\amp, ~endothelial_amp,
-				\attack, ~endothelial_attack
-			);
-		});
-		~endothelial_input.do({
-			arg item, index;
-			item.set(
-				\trig, 1,
-				\buf, ~endothelial_buffer,
-				\grain_size, ~fibroblast_endothelial_grain_size,
-				\texture_speed, ~fibroblast_endothelial_texture_speed,
-				\amp, ~fibroblast_endothelial_amp
-			);
-		});
-		3.wait;
-	})
+	(stream_length/10).do {
+		(stream_length/4).do {
+			~endothelial.do({
+				arg item, index;
+				item.set(
+					\trig, 1,
+					\freq, ~endothelial_vocoder_pitches,
+					\texture_dur, ~endothelial_texture_speed,
+					\texture_speed, ~endothelial_texture_dur,
+					\amp, ~endothelial_amp,
+					\attack, ~endothelial_attack
+				);
+			});
+			~endothelial_input.do({
+				arg item, index;
+				item.set(
+					\trig, 1,
+					\buf, ~endothelial_buffer,
+					\grain_size, ~fibroblast_endothelial_grain_size,
+					\texture_speed, ~fibroblast_endothelial_texture_speed,
+					\amp, ~fibroblast_endothelial_amp
+				);
+			});
+			3.wait;
+		};
+	};
 }).play;
 )

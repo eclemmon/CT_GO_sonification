@@ -13,17 +13,42 @@
 // ]);
 
 (
-~fibroblast_texture_speed = Prand(List.fill(5, {arg i; (i+1)}), 65).asStream;
-~fibroblast_grain_size = Prand(List.fill(5, {arg i; 0.25+(i*0.25)}), 65).asStream;
-~fibroblast_amp = Prand(List.fill(4, {arg i; 0.05+(i*0.025)}), 65).asStream;
-~fibroblast_grain_pb_rate_val = Prand(List.fill(5, {arg i; (i+1)}), 65).asStream;
-~fibroblast_pos_change_rate = Prand(List.fill(5, {arg i; 0.25*(i*0.25)}), 65).asStream;
+var stream_length, subdiv;
+stream_length = 120;
+subdiv = stream_length/40;
+
+~fibroblast_texture_speed = Pseq([
+	Prand(List.fill(5, {arg i; (i+1)/10}), subdiv), // ensheathment
+	Prand(List.fill(10, {arg i; i+10}), subdiv), // cell death
+	Prand(List.fill(5, {arg i; 0.5+(i*0.25)}), subdiv), // cell cycle/genesis/division (repair)
+	Prand(List.fill(5, {arg i; 0.5+(i*0.25)}), subdiv), // peptide biosynthesis (repair)
+	],
+1).asStream;
+
+~fibroblast_grain_size = Pseq([
+	Prand(List.fill(5, {arg i; 2.0+(i*0.25)}), subdiv), // ensheathment
+	Prand(List.fill(5, {arg i; 1.0+(i*0.1)}), subdiv), // cell death
+	Prand(List.fill(5, {arg i; 1.0+(i*0.25)}), subdiv), // cell cycle/genesis/division (repair)
+	Prand(List.fill(5, {arg i; 1.0+(i*0.25)}), subdiv), // peptide biosynthesis (repair)
+	],
+1).asStream;
+
+~fibroblast_amp = Pseq([
+	Prand(List.fill(4, {arg i; 0.05+(i*0.025)}), subdiv), // ensheathment
+	Prand(List.fill(5, {arg i; 1+(i*0.025)}), subdiv), // cell death
+	Prand(List.fill(5, {arg i; 0.05+(i*0.3)}), subdiv), // cell cycle/genesis/division (repair)
+	Prand(List.fill(5, {arg i; 0.05+(i*0.3)}), subdiv), // peptide biosynthesis (repair)
+	],
+1).asStream;
+
+~fibroblast_grain_pb_rate_val = Prand(List.fill(5, {arg i; (i+1)}), stream_length).asStream;
+~fibroblast_pos_change_rate = Prand(List.fill(5, {arg i; 0.25+(i*0.25)}), stream_length).asStream;
 
 Routine({
 	~fibroblast = Synth(\fibroblasts, [
 		\out, 0,
 		\trig, 1,
-		\dur, 120,
+		\dur, stream_length,
 		\amp, ~fibroblast_amp,
 		\buf, ~grain_buffer,
 		\grain_size, ~fibroblast_grain_size,
@@ -31,7 +56,7 @@ Routine({
 		\pos_change_rate, ~fibroblast_pos_change_rate,
 		\texture_speed, ~fibroblast_texture_speed
 	]);
-	3.wait;
+	10.wait;
 	loop({
 		~fibroblast.set(
 			\amp, ~fibroblast_amp,
@@ -41,7 +66,8 @@ Routine({
 			\pos_change_rate, ~fibroblast_pos_change_rate,
 			\texture_speed, ~fibroblast_texture_speed
 		);
-		3.wait;
-	})
+		10.wait;
+	});
+
 }).play;
 )

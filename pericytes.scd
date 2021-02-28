@@ -13,23 +13,53 @@
 // Synth(\pericyte_vocoder, [\input, [94,95], \out, 0, \trig, 1, \freq, 24.midicps, \texture_dur, 1, \amp, 10, \texture_speed, 4]);
 
 (
-~fibroblast_pericyte_grain_size = Prand(List.fill(5, {arg i; 0.5+(i*0.25)}), 65).asStream;
-~fibroblast_pericyte_texture_speed = Prand(List.fill(2, {arg i; 12+i*6}), 65).asStream;
-~fibroblast_pericyte_amp = Prand(List.fill(4, {arg i; 0.2+(i*0.01)}), 65).asStream;
+var stream_length, subdiv;
+stream_length = 120;
+subdiv = stream_length/4;
 
-~pericyte_vocoder_pitches = Pseq([
-	Prand([36, 40, 43, 47].midicps, 20),
-	Prand([36, 40, 43, 47, 50].midicps, 10),
-	Prand([35, 40, 43, 47, 50].midicps, 10),
-	Prand([33, 40, 43, 47, 50].midicps, 20),
-	Prand([53-24, 57-24, 60-24, 64-24, 71-24, 74-24].midicps, 20)
+~fibroblast_pericyte_grain_size = Pseq([
+	Prand(List.fill(5, {arg i; 0.75+(i*0.1)}), subdiv), // development
+	Prand(List.fill(5, {arg i; 0.75+(i*0.1)}), subdiv), // development
+	Prand(List.fill(5, {arg i; 0.75+(i*0.25)}), subdiv), // peptide biosynthesis
+	Prand(List.fill(5, {arg i; 0.75+(i*0.25)}), subdiv), // peptide biosynthesis
+	],
+1).asStream;
+
+~fibroblast_pericyte_texture_speed = Pseq([
+	Prand(List.fill(2, {arg i; 12+(i*6)}), subdiv), // development
+	Prand(List.fill(5, {arg i; 12+(i*6)}), subdiv), // development
+	Prand(List.fill(5, {arg i; 12+(i*12)}), subdiv), // peptide biosynthesis
+	Prand(List.fill(5, {arg i; 12+(i*12)}), subdiv), // peptide biosynthesis
 ],
 1).asStream;
 
-~pericyte_texture_speed = Prand(List.fill(4, {arg i; (i+1)*0.5}), 65).asStream;
-~pericyte_texture_dur = Prand(List.fill(5, {arg i; 0.8+(i*0.1)}), 65).asStream;
-~pericyte_amp = Prand(List.fill(2, {arg i; 1+i}), 65).asStream;
-~pericyte_attack = Prand([0.01, 0.1, 0.4, 0.01, 0.01, 0.05], 65).asStream;
+~fibroblast_pericyte_amp = Pseq([
+	Prand(List.fill(4, {arg i; 0.3+(i*0.01)}), subdiv), // development
+	Prand(List.fill(4, {arg i; 0.3+(i*0.01)}), subdiv), // development
+	Prand(List.fill(4, {arg i; 0.3+(i*0.02)}), subdiv), // peptide biosynthesis
+	Prand(List.fill(4, {arg i; 0.3+(i*0.02)}), subdiv) // peptide biosynthesis
+	],
+1).asStream;
+
+~pericyte_vocoder_pitches = Pseq([
+	Prand([36, 40, 43, 47].midicps, subdiv),
+	Prand([36, 40, 43, 47].midicps, subdiv),
+	Prand(([59, 64, 67, 71, 74]-24).midicps, subdiv),
+	Prand(([59, 64, 67, 71, 74]-24).midicps, subdiv)
+],
+1).asStream;
+
+~pericyte_texture_speed = Pseq([
+	Prand(List.fill(4, {arg i; (i+1)*0.5}), subdiv), // development
+	Prand(List.fill(4, {arg i; (i+1)*0.5}), subdiv), // response
+	Prand(List.fill(4, {arg i; (i+0.8)}), subdiv), // peptide biosynthesis
+	Prand(List.fill(4, {arg i; (i+0.8)}), subdiv), // peptide biosynthesis
+],
+1).asStream;
+
+~pericyte_texture_dur = Prand(List.fill(5, {arg i; 0.8+(i*0.1)}), stream_length).asStream;
+~pericyte_amp = Prand(List.fill(2, {arg i; 1+i}), stream_length).asStream;
+~pericyte_attack = Prand([0.01, 0.1, 0.4, 0.01, 0.01, 0.05], stream_length).asStream;
 
 Routine({
 	// BE SURE TO CHECK INS AND OUTS SO THAT THERE ARE NO CONFLICTS
@@ -44,7 +74,7 @@ Routine({
 			\texture_speed, ~pericyte_texture_dur,
 			\amp, ~pericyte_amp,
 			\attack, ~pericyte_attack,
-			\dur, 120
+			\dur, stream_length
 		]);
 	});
 	~pericyte_input = Array.fill(3, {
@@ -58,33 +88,35 @@ Routine({
 			\post_change_rate, 4,
 			\texture_speed, ~fibroblast_pericyte_texture_speed,
 			\amp, ~fibroblast_pericyte_amp,
-			\dur, 120
+			\dur, stream_length
 		]);
 	});
 	3.wait;
-	loop({
-		~pericytes.do({
-			arg item, index;
-			item.set(
-				\trig, 1,
-				\freq, ~pericyte_vocoder_pitches,
-				\texture_dur, ~pericyte_texture_speed,
-				\texture_speed, ~pericyte_texture_dur,
-				\amp, ~pericyte_amp,
-				\attack, ~pericyte_attack
-			);
-		});
-		~pericyte_input.do({
-			arg item, index;
-			item.set(
-				\trig, 1,
-				\buf, ~endothelial_buffer,
-				\grain_size, ~fibroblast_pericyte_grain_size,
-				\texture_speed, ~fibroblast_pericyte_texture_speed,
-				\amp, ~fibroblast_pericyte_amp
-			);
-		});
-		3.wait;
-	})
+	(stream_length/10).do {
+		(stream_length/4).do {
+			~pericytes.do({
+				arg item, index;
+				item.set(
+					\trig, 1,
+					\freq, ~pericyte_vocoder_pitches,
+					\texture_dur, ~pericyte_texture_speed,
+					\texture_speed, ~pericyte_texture_dur,
+					\amp, ~pericyte_amp,
+					\attack, ~pericyte_attack
+				);
+			});
+			~pericyte_input.do({
+				arg item, index;
+				item.set(
+					\trig, 1,
+					\buf, ~endothelial_buffer,
+					\grain_size, ~fibroblast_pericyte_grain_size,
+					\texture_speed, ~fibroblast_pericyte_texture_speed,
+					\amp, ~fibroblast_pericyte_amp
+				);
+			});
+			3.wait;
+		};
+	};
 }).play;
 )

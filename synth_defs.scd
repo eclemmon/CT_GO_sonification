@@ -118,8 +118,9 @@ SynthDef(\OPC, {
 }).add;
 
 SynthDef(\Oligodendrocytes, {
-	arg out=0, dur=15, amp, attack=0.1, release=0.1, decay_time=0.1, decay_amp=0.7, freq=440, fmod_freq=533, fmod_mul=200, cutoff_freq=880, pos=0, trig=0, texture_speed=3, texture_dur=0.5;
-	var pan, sig, env, filter, carrier, modulator, fmod_env, texture_trig, texture;
+	arg out=0, dur=15, amp, attack=0.1, release=0.1, decay_time=0.1, decay_amp=0.7, freq=440, fmod_freq=533, fmod_mul=200, cutoff_freq=880, pos=0, trig=0, texture_speed=3, texture_start_dur=0.5, texture_end_dur=2;
+	var pan, sig, env, filter, carrier, modulator, fmod_env, texture_trig, texture, texture_dur;
+	texture_dur = Line.kr(texture_start_dur, texture_end_dur, dur);
 	texture_trig = Dust.kr(texture_speed);
 	texture = EnvGen.kr(Env.perc(attack, texture_dur), gate: texture_trig, levelScale: LFNoise0.kr(6).range(0.3, 0.9));
 	fmod_env = EnvGen.kr(Env([0,1,1,0], [attack, dur/2-attack, dur/2], curve: 'wel'), gate: trig);
@@ -136,7 +137,7 @@ SynthDef(\Oligodendrocytes, {
 }).add;
 
 SynthDef.new(\macrophages, {
-	arg out, amp, time_to_return, filter_freq, texture_speed=5, attack=0.1, texture_dur=0.4, trig=0, dur=15, rq=0.001, pos=0;
+	arg out, amp, filter_freq, texture_speed=5, attack=0.1, texture_dur=0.4, trig=0, dur=15, rq=0.001, pos=0;
 	var noise, rand_amp, filter, texture_trig, env, texture, pan;
 	texture_trig = Dust.kr(texture_speed);
 	env = EnvGen.kr(

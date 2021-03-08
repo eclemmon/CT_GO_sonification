@@ -27,51 +27,51 @@ s.waitForBoot({
 // Neuron-like cells
 // -----------------
 // NEURONS:
-thisProcess.interpreter.executeFile("/Users/ericlemmon/Desktop/VPL_Sonification_Project/project_files/neurons.scd");
+thisProcess.interpreter.executeFile("/Users/ericlemmon/Desktop/VPL_Sonification_Project/project_files/cell_types/neurons.scd");
 
 // ASTROCYTES:
-thisProcess.interpreter.executeFile("/Users/ericlemmon/Desktop/VPL_Sonification_Project/project_files/astrocytes.scd");
+thisProcess.interpreter.executeFile("/Users/ericlemmon/Desktop/VPL_Sonification_Project/project_files/cell_types/astrocytes.scd");
 
 // EPENDYMAL:
-thisProcess.interpreter.executeFile("/Users/ericlemmon/Desktop/VPL_Sonification_Project/project_files/ependymal.scd");
+thisProcess.interpreter.executeFile("/Users/ericlemmon/Desktop/VPL_Sonification_Project/project_files/cell_types/ependymal.scd");
 
 // #################
 
 // Endothelial and Pericyte cells
 // ------------------------------
 // ENDOTHELIAL:
-thisProcess.interpreter.executeFile("/Users/ericlemmon/Desktop/VPL_Sonification_Project/project_files/endothelial.scd");
+thisProcess.interpreter.executeFile("/Users/ericlemmon/Desktop/VPL_Sonification_Project/project_files/cell_types/endothelial.scd");
 
 // PERICYTES:
-thisProcess.interpreter.executeFile("/Users/ericlemmon/Desktop/VPL_Sonification_Project/project_files/pericytes.scd");
+thisProcess.interpreter.executeFile("/Users/ericlemmon/Desktop/VPL_Sonification_Project/project_files/cell_types/pericytes.scd");
 
 // #################
 
 // Fibroblast cells
 // ------------------------------
 // FIBROBLASTS:
-thisProcess.interpreter.executeFile("/Users/ericlemmon/Desktop/VPL_Sonification_Project/project_files/fibroblasts.scd");
+thisProcess.interpreter.executeFile("/Users/ericlemmon/Desktop/VPL_Sonification_Project/project_files/cell_types/fibroblasts.scd");
 
 // #################
 
 // Oligodendrocytes & OPCS
 // ------------------------------
 // OPCS:
-thisProcess.interpreter.executeFile("/Users/ericlemmon/Desktop/VPL_Sonification_Project/project_files/opc.scd");
+thisProcess.interpreter.executeFile("/Users/ericlemmon/Desktop/VPL_Sonification_Project/project_files/cell_types/opc.scd");
 
 // OLIGODENDROCYTES:
-thisProcess.interpreter.executeFile("/Users/ericlemmon/Desktop/VPL_Sonification_Project/project_files/opc.scd");
+thisProcess.interpreter.executeFile("/Users/ericlemmon/Desktop/VPL_Sonification_Project/project_files/cell_types/opc.scd");
 
 // #################
 
 // Immune Cells
 // ------------------------------
 // MACROPHAGES
-thisProcess.interpreter.executeFile("/Users/ericlemmon/Desktop/VPL_Sonification_Project/project_files/macrophages.scd");
+thisProcess.interpreter.executeFile("/Users/ericlemmon/Desktop/VPL_Sonification_Project/project_files/cell_types/macrophages.scd");
 
 // MONOCYTES
-thisProcess.interpreter.executeFile("/Users/ericlemmon/Desktop/VPL_Sonification_Project/project_files/monocytes.scd");
+thisProcess.interpreter.executeFile("/Users/ericlemmon/Desktop/VPL_Sonification_Project/project_files/cell_types/monocytes.scd");
 
 // MICROGLIA
-thisProcess.interpreter.executeFile("/Users/ericlemmon/Desktop/VPL_Sonification_Project/project_files/microglia.scd");
+thisProcess.interpreter.executeFile("/Users/ericlemmon/Desktop/VPL_Sonification_Project/project_files/cell_types/microglia.scd");
 )
